@@ -54,7 +54,8 @@ function toAnnouncement(row) {
     level: row.level || 'info',
     link: row.link || null,
     linkLabel: row.link_label || null,
-    dismissible: row.dismissible !== 0,
+    // Mặc định không cho đóng: chỉ 1 mới hiện nút đóng trên giao diện.
+    dismissible: row.dismissible === 1,
   };
 }
 
@@ -145,7 +146,7 @@ async function handleAdmin(request, env, path) {
         level,
         b.link || null,
         b.linkLabel ? String(b.linkLabel).slice(0, 60) : null,
-        b.dismissible === false ? 0 : 1,
+        b.dismissible === true ? 1 : 0,
         b.enabled === false ? 0 : 1,
         b.minVersion || null,
         b.maxVersion || null,

@@ -6,6 +6,7 @@ không I/O — để test khoá được hợp đồng mà không cần mock gì
 HỢP ĐỒNG VỚI TRANG TRUNG TÂM (``deploy/phone-home-worker/``):
   gửi:  ``{ instanceId, version }``                         — ĐÚNG HAI TRƯỜNG, không hơn.
   nhận: ``{ announcement: null | { id, text, level?, link?, linkLabel?, dismissible? } }``
+      (``dismissible`` vắng mặt ⇒ False: dải không có nút đóng)
 
 Mọi thứ nhận về là dữ liệu bên ngoài: kiểm từng trường, cắt độ dài, chỉ nhận link
 https. Sai một trường ⇒ coi như KHÔNG có thông báo (an toàn hơn hiện bừa).
@@ -31,7 +32,7 @@ class Announcement:
     level: str           # info | warning | critical
     link: Optional[str]  # chỉ https
     linkLabel: Optional[str]
-    dismissible: bool    # False ⇒ không có nút đóng (cập nhật bảo mật)
+    dismissible: bool    # mặc định False ⇒ không có nút đóng; True chỉ khi trang trung tâm gửi rõ
 
     def to_json(self) -> dict:
         return asdict(self)
@@ -86,7 +87,9 @@ def parse_announcement_response(body: Any) -> Optional[Announcement]:
             return None
         link_label = label.strip()[:LINK_LABEL_MAX_LEN] or None
 
-    dismissible = True if "dismissible" not in a else a.get("dismissible") is True
+    # Mặc định KHÔNG cho đóng (chủ dự án chốt 2026-10-08): đây là kênh chủ dự án gửi
+    # thông báo tới người dùng. Chỉ hiện nút đóng khi trang trung tâm gửi rõ true.
+    dismissible = a.get("dismissible") is True
 
     return Announcement(
         id=ident.strip(),

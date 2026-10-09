@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS announcements (
   level              TEXT NOT NULL DEFAULT 'info',  -- info | warning | critical
   link               TEXT,               -- chỉ https
   link_label         TEXT,
-  dismissible        INTEGER NOT NULL DEFAULT 1,
+  dismissible        INTEGER NOT NULL DEFAULT 0,  -- 0 = không cho đóng (mặc định)
   enabled            INTEGER NOT NULL DEFAULT 1,
   min_version        TEXT,
   max_version        TEXT,

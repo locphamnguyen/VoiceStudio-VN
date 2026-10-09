@@ -33,34 +33,9 @@ Zone `zopen.vn` phải nằm trên Cloudflare, và `updater.zopen.vn` cần mộ
 Đổi domain thì đổi hằng `PHONE_HOME_URL` ở `backend/services/phone_home.py` **trước khi
 phát hành** — địa chỉ ghim cứng trong mã, không có biến env.
 
-## Dùng hằng ngày
-
-```bash
-T="Bearer $ADMIN_TOKEN"; B=https://updater.zopen.vn/voicestudio-phone-home/v1/admin
-
-# Thống kê: đã cài / đang dùng 7 ngày / 30 ngày / theo bản
-curl -s -H "Authorization: $T" $B/stats
-
-# Thông báo "có bản 0.6" CHỈ cho bản cũ hơn 0.6
-curl -s -X PUT -H "Authorization: $T" -H 'content-type: application/json' $B/announcements/rel-0.6 \
-  -d '{"text":"Đã có VoiceStudio-VN 0.6 — nhanh hơn, thêm giọng mới.","level":"info",
-       "link":"https://github.com/locphamnguyen/VoiceStudio-VN/releases","linkLabel":"Cách cập nhật",
-       "maxVersion":"0.5.99"}'
-
-# Tắt dải (mọi bản cài ẩn trong vòng 12h + tối đa 30 phút giao diện hỏi lại)
-curl -s -X PUT -H "Authorization: $T" -H 'content-type: application/json' $B/announcements/rel-0.6 \
-  -d '{"text":"(tắt)","enabled":false}'
-
-# Xoá hẳn
-curl -s -X DELETE -H "Authorization: $T" $B/announcements/rel-0.6
-```
-
-Trường của một thông báo: `text` (thuần, ≤ 500 ký tự, giao diện KHÔNG render HTML), `level`
-(`info`/`warning`/`critical`), `link` (chỉ https), `linkLabel`, `dismissible` (false = không
-có nút đóng, cho cập nhật bảo mật), `enabled`, `minVersion`/`maxVersion`, `targetInstanceId`
-(nhắm một máy). **Đổi `id` mới** khi muốn người đã bấm đóng thấy lại.
-
 ## Độ trễ
 
 Bản cài gọi về mỗi 12h; giao diện hỏi backend mỗi 30 phút. Thông báo mới tới mọi người trong
 tối đa ~12,5h. Muốn nhanh hơn thì giảm `PING_INTERVAL_S` ở `backend/services/phone_home.py`.
+
+Dải thông báo mặc định **không có nút đóng** — người dùng luôn thấy thông báo chủ dự án gửi.

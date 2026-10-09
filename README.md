@@ -207,7 +207,7 @@ Google chỉ chấp nhận `http://localhost` hoặc địa chỉ **https** làm
 
 ## 📣 Thông báo cập nhật và gọi-về trang trung tâm
 
-Khi có bản mới hoặc tin cần biết, một **dải thông báo mỏng** hiện ở **cạnh dưới vùng làm việc** (ngay trên chân trang), trên cả Windows, macOS, Linux và bản trình duyệt. Bấm **✕** để đóng một thông báo; thông báo mới sẽ hiện lại. Thông báo bảo mật quan trọng có thể không có nút đóng. Không có gì để báo thì dải ẩn hẳn.
+Khi có bản mới hoặc tin cần biết, một **dải thông báo mỏng** hiện ở **cạnh dưới vùng làm việc** (ngay trên chân trang), trên cả Windows, macOS, Linux và bản trình duyệt. Không có gì để báo thì dải ẩn hẳn.
 
 Đặt ở cạnh dưới (không phải cạnh trên) vì cạnh trên của cửa sổ là thanh tiêu đề dùng để kéo cửa sổ và có nút hệ thống của macOS — một dải bấm được ở đó sẽ hoặc chặn thao tác kéo, hoặc không bấm được.
 

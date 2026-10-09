@@ -54,7 +54,8 @@ def test_bad_or_empty_bodies_mean_no_announcement(body):
 
 def test_defaults_and_truncation():
     a = parse_announcement_response({"announcement": {"id": "a", "text": "x" * 900, "level": "??"}})
-    assert a.level == "info" and a.dismissible is True and a.link is None
+    # Mặc định KHÔNG cho đóng — chủ dự án chốt.
+    assert a.level == "info" and a.dismissible is False and a.link is None
     assert len(a.text) == 500
 
 
@@ -124,4 +125,13 @@ def test_route_returns_cached_announcement(monkeypatch):
     monkeypatch.setattr(phone_home._state, "current", parse_announcement_response(
         {"announcement": {"id": "a", "text": "t"}}))
     body = client.get("/announcement").json()["announcement"]
-    assert body["id"] == "a" and body["dismissible"] is True
+    assert body["id"] == "a" and body["dismissible"] is False
+
+
+def test_dismissible_only_when_central_page_says_true():
+    def parse(v):
+        return parse_announcement_response({"announcement": {"id": "a", "text": "t", "dismissible": v}})
+
+    assert parse(True).dismissible is True
+    for v in (False, "true", 1, None):
+        assert parse(v).dismissible is False
