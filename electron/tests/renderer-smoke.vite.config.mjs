@@ -18,6 +18,22 @@ export default defineConfig({
     react(),
     tailwindcss(),
     {
+      // VoiceStudio-VN opens in Vietnamese when no language was picked. The
+      // browser smokes assert English labels, so pin English unless a smoke
+      // sets its own locale first (language-picker-smoke does, via its init script).
+      name: 'smoke-default-locale',
+      transformIndexHtml() {
+        return [
+          {
+            tag: 'script',
+            injectTo: 'head-prepend',
+            children:
+              "try{if(!localStorage.getItem('voicestudio.locale'))localStorage.setItem('voicestudio.locale','en')}catch(e){}",
+          },
+        ];
+      },
+    },
+    {
       name: 'shared-capture-worklet',
       configureServer(server) {
         server.middlewares.use((request, response, next) => {

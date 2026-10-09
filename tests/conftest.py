@@ -27,6 +27,10 @@ if not os.environ.get("OMNIVOICE_DATA_DIR"):
 # into this process. `core.user_env` resolves OMNIVOICE_ENV_FILE at call
 # time, so pointing it into the throwaway data dir neutralizes both the
 # load and any test that writes user-env without stubbing.
+# VoiceStudio-VN: the account login gate is on by default for the web
+# deployment. The suite exercises routes directly, so it starts with the gate
+# off; tests/test_accounts.py turns it on explicitly per test.
+os.environ.setdefault("VOICESTUDIO_ACCOUNTS", "off")
 if not os.environ.get("OMNIVOICE_ENV_FILE"):
     os.environ["OMNIVOICE_ENV_FILE"] = os.path.join(
         os.environ["OMNIVOICE_DATA_DIR"], "user-env"

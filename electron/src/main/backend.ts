@@ -446,6 +446,10 @@ function childEnv(
   // Arms backend/core/parent_liveness.py: stdin EOF == "the shell is gone".
   env.OMNIVOICE_DESKTOP_CONTAINED = '1';
   env.OMNIVOICE_PORT = String(port);
+  // VoiceStudio-VN: the desktop renderer talks to its own loopback backend
+  // from app://, where the account cookie cannot travel; the OS login already
+  // guards this machine. Accounts stay on for the browser (web) deployment.
+  env.VOICESTUDIO_ACCOUNTS = 'off';
   // The dev renderer is served by Vite on a real port; tell the backend so
   // Settings -> Sharing reports it. Packaged builds serve app:// (no port).
   const rendererPort = devRendererPort(env.ELECTRON_RENDERER_URL);

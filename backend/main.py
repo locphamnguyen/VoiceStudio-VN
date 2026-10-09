@@ -743,6 +743,8 @@ def _phase_a_build_inner() -> None:
     from api.routers import workers as workers_router  # noqa: E402
     from api.routers import telephony_twilio as _telephony_twilio_router  # noqa: E402
     from api.routers import calls as _calls_router  # noqa: E402
+    from api.routers import accounts as _accounts_router  # noqa: E402
+    from api.routers import announcement as _announcement_router  # noqa: E402
     _router_modules.extend([
         system, profiles, profile_images, exports, generation, voice_convert, dub_core, dub_generate,
         dub_export, dub_translate, projects, glossary, engines, tools,
@@ -751,7 +753,8 @@ def _phase_a_build_inner() -> None:
         openai_compat, tts_stream, marketplace, personas, sonitranslate,
         audiobook, longform_jobs, pronunciation, settings_router,
         media_tools_router, auth_router, _mcp_bindings_router, workers_router,
-        _telephony_twilio_router, _calls_router,
+        _telephony_twilio_router, _calls_router, _accounts_router,
+        _announcement_router,
     ])
     # Download-acceleration state, once, for triage-from-logs (FDL-03).
     try:
@@ -993,6 +996,11 @@ async def _phase_b(app: FastAPI) -> None:
     app.state.worker_task = asyncio.create_task(task_manager.worker())
     # Warm the TTS model in the background so first /generate is instant.
     app.state.preload_task = asyncio.create_task(preload_model())
+    # VoiceStudio-VN: gọi-về trang trung tâm + dải thông báo (services/phone_home.py).
+    from services.phone_home import phone_home_loop, should_start as _phone_home_should_start
+    app.state.phone_home_task = (
+        asyncio.create_task(phone_home_loop()) if _phone_home_should_start() else None
+    )
     # Dictation v2: capture ASR warms in the background BY DEFAULT (~30s
     # post-boot, skipped under 4 GB free RAM at warm time).
     app.state.capture_preload_task = None  # only assigned when it runs (#1000 class)
@@ -1292,6 +1300,8 @@ async def lifespan(app: FastAPI):
         getattr(app.state, "watermark_preload_task", None),
         timeout=20.0,
     )
+    # VoiceStudio-VN: the phone-home loop only sleeps or waits on a 5 s HTTP call.
+    await _cancel_and_await_tasks(getattr(app.state, "phone_home_task", None), timeout=6.0)
     # The watermark warm-up runs on its dedicated 1-worker pool. Cancellation
     # detaches the asyncio future but cannot kill a thread inside AudioSeal,
     # so drain it fully before lifespan teardown reports completion.
@@ -1843,6 +1853,13 @@ app.add_middleware(StartupGateMiddleware)
 # Starlette places it outside them: browser preflights carry no credentials and
 # must reach CORS before either gate can reject the request.
 app.add_middleware(NetworkAccessMiddleware)
+
+# VoiceStudio-VN: cổng đăng nhập tài khoản (đăng ký / đăng nhập kiểu Vonia).
+# Bật mặc định khi chạy bản web; Electron desktop đặt VOICESTUDIO_ACCOUNTS=off.
+# Đặt ngoài NetworkAccess và trong BearerKey/CORS: 401 vẫn mang header CORS, và
+# danh tính API key (đã phân giải trong scope) được nhận để bỏ qua đăng nhập.
+from core.account_gate import AccountGateMiddleware
+app.add_middleware(AccountGateMiddleware)
 
 # Remote-backend bearer gate (parity program Wave 2.3 / §R2). Inert unless
 # OMNIVOICE_API_KEY is set. Distinct from the PIN gate above: the PIN guards

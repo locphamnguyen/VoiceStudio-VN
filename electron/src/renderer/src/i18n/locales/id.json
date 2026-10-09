@@ -3435,5 +3435,15 @@
     "error": "Tidak dapat memeriksa bahasa",
     "modelLanguages": "Bahasa untuk model ini",
     "changeModel": "Ganti model"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }

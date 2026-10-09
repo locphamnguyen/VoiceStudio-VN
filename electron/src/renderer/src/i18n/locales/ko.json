@@ -3435,5 +3435,15 @@
     "error": "언어를 확인할 수 없습니다",
     "modelLanguages": "이 모델의 언어",
     "changeModel": "모델 변경"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }

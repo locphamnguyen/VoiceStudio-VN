@@ -3435,5 +3435,15 @@
     "error": "भाषाओं की जाँच नहीं हो सकी",
     "modelLanguages": "इस मॉडल की भाषाएँ",
     "changeModel": "मॉडल बदलें"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }

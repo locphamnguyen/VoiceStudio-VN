@@ -1,3 +1,8 @@
 # Hash-pinned legal texts (tests/test_cla_workflow.py): identical bytes on every OS.
 .github/CLA-*.md text eol=lf
 .github/CCLA-*.md text eol=lf
+# VoiceStudio-VN: tệp bấm-đúp trên Windows cần CRLF; script shell cần LF.
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.sh text eol=lf
+*.command text eol=lf

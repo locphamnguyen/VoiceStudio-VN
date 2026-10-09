@@ -3,6 +3,7 @@ import { ArrowUpRightIcon, GemIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import './support-shortcut.css';
+import { AccountMenu } from './account-menu';
 import { GithubStar } from './github-star';
 
 export function SupportShortcut() {
@@ -30,6 +31,7 @@ export function SupportShortcut() {
         </TooltipContent>
       </Tooltip>
       <GithubStar />
+      <AccountMenu />
     </div>
   );
 }

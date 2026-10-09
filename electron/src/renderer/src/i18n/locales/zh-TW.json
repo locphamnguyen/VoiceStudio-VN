@@ -3435,5 +3435,15 @@
     "error": "無法檢查語言",
     "modelLanguages": "此模型的語言",
     "changeModel": "更換模型"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }

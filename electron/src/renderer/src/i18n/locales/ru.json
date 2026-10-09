@@ -3439,5 +3439,15 @@
     "error": "Не удалось проверить языки",
     "modelLanguages": "Языки этой модели",
     "changeModel": "Сменить модель"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }

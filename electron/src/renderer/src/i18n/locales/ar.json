@@ -3443,5 +3443,15 @@
     "error": "تعذر التحقق من اللغات",
     "modelLanguages": "لغات هذا النموذج",
     "changeModel": "تغيير النموذج"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }

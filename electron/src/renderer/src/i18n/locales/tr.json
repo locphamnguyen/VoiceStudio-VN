@@ -3435,5 +3435,15 @@
     "error": "Diller kontrol edilemedi",
     "modelLanguages": "Bu modelin dilleri",
     "changeModel": "Modeli değiştir"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
+  },
+  "announcement": {
+    "details": "Learn more",
+    "dismiss": "Dismiss this notice"
   }
 }
