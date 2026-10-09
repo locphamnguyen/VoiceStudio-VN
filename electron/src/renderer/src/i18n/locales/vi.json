@@ -3441,5 +3441,9 @@
     "signed_in_as": "Đang đăng nhập: {{email}}",
     "members": "Quản lý thành viên",
     "logout": "Đăng xuất"
+  },
+  "announcement": {
+    "details": "Xem chi tiết",
+    "dismiss": "Đóng thông báo này"
   }
 }

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { useBackendStatus } from '@/hooks/use-backend-status';
 import { isBackendReachable } from '@shared/utils/backendStage';
 import { SystemNotifications } from './system-notifications';
+import { ServerAnnouncementBanner } from './server-announcement-banner';
 
 export function AppShell() {
   const backend = useBackendStatus();
@@ -40,6 +41,7 @@ export function AppShell() {
               <div className="min-h-0 flex-1 overflow-hidden">
                 <Outlet />
               </div>
+              <ServerAnnouncementBanner />
               <RepairAgentDock />
             </SettingsWorkspace>
           </>
@@ -54,6 +56,7 @@ export function AppShell() {
               <div className="min-h-0 flex-1 overflow-hidden">
                 <Outlet />
               </div>
+              <ServerAnnouncementBanner />
               <SponsorFooter />
               <RepairAgentDock />
             </main>

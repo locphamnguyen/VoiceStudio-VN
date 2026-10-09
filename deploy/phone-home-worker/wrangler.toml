@@ -1,0 +1,23 @@
+# Cloudflare Worker nhận gọi-về (phone-home) từ các bản VoiceStudio-VN đã cài.
+# Deploy: xem README.md cùng thư mục.
+name = "voicestudio-phone-home"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Gắn vào domain trung tâm. Bản cài gọi:
+#   https://go.zalocrm.vn/voicestudio-phone-home/v1/ping
+#   (backend/services/phone_home.py → PHONE_HOME_URL)
+# Prefix riêng "voicestudio-phone-home" để không đụng Worker gọi-về của ZaloCRM
+# ("/phone-home/*") trên cùng zone.
+routes = [
+  { pattern = "go.zalocrm.vn/voicestudio-phone-home/*", zone_name = "zalocrm.vn" },
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "voicestudio-phone-home"
+# database_id = "<điền sau khi `wrangler d1 create voicestudio-phone-home`>"
+
+[vars]
+# Khoá quản trị cho /voicestudio-phone-home/v1/admin/* — đặt bằng
+# `wrangler secret put ADMIN_TOKEN`, KHÔNG ghi ở đây.

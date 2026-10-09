@@ -16,7 +16,7 @@
 
 > **Đây là bản viết lại từ [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio)** (giấy phép AGPL-3.0) để **người không rành kỹ thuật cũng cài và dùng được**. Lõi xử lý giọng nói giữ nguyên bản gốc; phần thay đổi nằm ở cách cài, ngôn ngữ giao diện và lớp tài khoản người dùng — xem [Khác gì so với bản gốc](#-khác-gì-so-với-bản-gốc).
 
-**Mục lục**: [Tính năng](#-tính-năng) · [Yêu cầu máy](#-yêu-cầu-máy) · [Windows](#-cài-đặt-trên-windows) · [macOS](#-cài-đặt-trên-macos) · [Linux](#-cài-đặt-trên-linux) · [Lần đầu sử dụng](#-lần-đầu-sử-dụng) · [Đăng nhập & thành viên](#-đăng-ký-đăng-nhập-và-quản-lý-thành-viên) · [Dùng chung trong mạng nội bộ](#-cho-nhiều-người-dùng-chung-trong-mạng-nội-bộ) · [Cấu hình nâng cao](#-cấu-hình-nâng-cao-tệp-env) · [Cập nhật](#-cập-nhật-lên-bản-mới) · [Gỡ cài đặt](#-gỡ-cài-đặt) · [Xử lý sự cố](#-xử-lý-sự-cố) · [Khác gì bản gốc](#-khác-gì-so-với-bản-gốc) · [Bản quyền](#-bản-quyền-và-sử-dụng-có-trách-nhiệm)
+**Mục lục**: [Tính năng](#-tính-năng) · [Yêu cầu máy](#-yêu-cầu-máy) · [Windows](#-cài-đặt-trên-windows) · [macOS](#-cài-đặt-trên-macos) · [Linux](#-cài-đặt-trên-linux) · [Lần đầu sử dụng](#-lần-đầu-sử-dụng) · [Đăng nhập & thành viên](#-đăng-ký-đăng-nhập-và-quản-lý-thành-viên) · [Dùng chung trong mạng nội bộ](#-cho-nhiều-người-dùng-chung-trong-mạng-nội-bộ) · [Thông báo cập nhật](#-thông-báo-cập-nhật-và-gọi-về-trang-trung-tâm) · [Cấu hình nâng cao](#-cấu-hình-nâng-cao-tệp-env) · [Cập nhật](#-cập-nhật-lên-bản-mới) · [Gỡ cài đặt](#-gỡ-cài-đặt) · [Xử lý sự cố](#-xử-lý-sự-cố) · [Khác gì bản gốc](#-khác-gì-so-với-bản-gốc) · [Bản quyền](#-bản-quyền-và-sử-dụng-có-trách-nhiệm)
 
 ---
 
@@ -29,7 +29,7 @@
 | Đọc chính tả bằng giọng nói, chép lời ra phụ đề | Hội thoại nhiều giọng | **Tài khoản người dùng, duyệt thành viên** |
 
 - Hơn **600 ngôn ngữ**, có **tiếng Việt**. Model mặc định là **VoiceStudio** (default, powered by k2-fsa/OmniVoice); có thể chọn thêm model khác ngay trong ứng dụng. Xem [danh mục tính năng & model](docs/feature-catalog.md).
-- **Mọi thứ chạy trên máy bạn** — không gửi âm thanh lên mạng, không cần API key. Chỉ tải model từ Hugging Face khi bạn đồng ý.
+- **Giọng nói và dữ liệu xử lý ngay trên máy bạn** — không gửi âm thanh, văn bản hay tài khoản lên mạng, không cần API key. Chỉ tải model từ Hugging Face khi bạn đồng ý. Thứ duy nhất tự gửi đi là **mã bản cài + số phiên bản** để nhận thông báo cập nhật — xem [Thông báo cập nhật](#-thông-báo-cập-nhật-và-gọi-về-trang-trung-tâm).
 - **Giao diện tiếng Việt** ngay lần mở đầu tiên (vẫn đổi được sang 20 ngôn ngữ khác trong *Cài đặt*).
 
 <details>
@@ -205,6 +205,23 @@ Google chỉ chấp nhận `http://localhost` hoặc địa chỉ **https** làm
 
 ---
 
+## 📣 Thông báo cập nhật và gọi-về trang trung tâm
+
+Khi có bản mới hoặc tin cần biết, một **dải thông báo mỏng** hiện ở **cạnh dưới vùng làm việc** (ngay trên chân trang), trên cả Windows, macOS, Linux và bản trình duyệt. Bấm **✕** để đóng một thông báo; thông báo mới sẽ hiện lại. Thông báo bảo mật quan trọng có thể không có nút đóng. Không có gì để báo thì dải ẩn hẳn.
+
+Đặt ở cạnh dưới (không phải cạnh trên) vì cạnh trên của cửa sổ là thanh tiêu đề dùng để kéo cửa sổ và có nút hệ thống của macOS — một dải bấm được ở đó sẽ hoặc chặn thao tác kéo, hoặc không bấm được.
+
+Để có thông báo, VoiceStudio định kỳ (30 giây sau khi mở, rồi mỗi 12 giờ) gọi về trang trung tâm của dự án và gửi **đúng hai thứ**:
+
+| Trường | Là gì |
+|---|---|
+| `instanceId` | chuỗi ngẫu nhiên sinh lần đầu chạy, lưu ở tệp `instance_id` trong thư mục dữ liệu — để đếm "một máy = một bản cài" |
+| `version` | số phiên bản VoiceStudio đang chạy |
+
+**Không gửi** gì về người dùng, tài khoản, giọng nói, văn bản hay cấu hình. Phía nhận **không lưu địa chỉ IP**. Máy không có mạng thì bỏ qua êm, không ảnh hưởng gì đến việc dùng. Đây là cách dự án biết bản tiếng Việt đang được dùng đến đâu và báo cập nhật cho bạn — nó là một phần của bản phát hành, **không có biến `.env` để tắt**. Toàn bộ mã ở `backend/services/phone_home.py`, `backend/core/announcement.py` và `electron/src/renderer/src/components/app-shell/server-announcement-banner.tsx`; phía nhận ở `deploy/phone-home-worker/`.
+
+---
+
 ## 🌐 Cho nhiều người dùng chung trong mạng nội bộ
 
 Muốn cả văn phòng dùng chung một máy có card mạnh:
@@ -299,6 +316,7 @@ Bản gốc [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) l�
 | Ngôn ngữ giao diện | Đoán theo trình duyệt, mặc định tiếng Anh | **Luôn mở bằng tiếng Việt** (vẫn đổi được), dịch nốt các chuỗi còn sót |
 | Cài từ mã nguồn | 4–5 lệnh, tự cài bun/uv/Python | **Bấm đúp 1 tệp** (`CaiDat-Windows.cmd` / `CaiDat-Mac.command` / `./cai-dat.sh`) |
 | Chạy | `bun run dev:web` (2 tiến trình, cổng 3900 + 3901) | **Bấm đúp 1 tệp**, 1 máy chủ duy nhất ở cổng 3900, tự mở trình duyệt, có lối tắt Desktop |
+| Thông báo cập nhật | Kiểm tra bản mới của ứng dụng desktop qua GitHub Releases | Dải thông báo từ trang trung tâm cho mọi bản cài (gửi mã bản cài + số phiên bản) |
 | Nhiều người dùng chung | PIN chia sẻ hoặc API key, không có tài khoản | **Đăng ký / đăng nhập** (email + Google), Quản trị viên duyệt thành viên |
 | Cấu hình | Biến môi trường hệ thống | Tệp `.env` cạnh tệp chạy, có ví dụ sẵn |
 | Hướng dẫn | Tiếng Anh, chia nhiều trang | README tiếng Việt từng bước, bảng xử lý sự cố |
@@ -306,6 +324,7 @@ Bản gốc [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) l�
 Phần lõi (model, lồng tiếng, API, MCP…) **giữ nguyên** để dễ đồng bộ các bản cập nhật từ bản gốc. Các thay đổi chính nằm ở:
 
 - `backend/core/accounts.py`, `account_gate.py`, `account_pages.py`, `backend/api/routers/accounts.py` — tài khoản (có test `tests/test_accounts.py`).
+- `backend/services/phone_home.py`, `backend/core/announcement.py`, `components/app-shell/server-announcement-banner.tsx`, `deploy/phone-home-worker/` — gọi-về + dải thông báo, port từ ZaloCRM (có test `tests/test_phone_home.py`).
 - `electron/src/renderer/src/i18n/` — tiếng Việt mặc định; `components/app-shell/account-menu.tsx` — nút tài khoản.
 - `CaiDat-*.cmd|command`, `Chay*.cmd|command`, `cai-dat.sh`, `chay.sh`, `scripts/vn/` — bộ cài / chạy.
 

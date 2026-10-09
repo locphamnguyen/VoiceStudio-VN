@@ -36,6 +36,7 @@ GET /account/pending
 GET /account/profile
 GET /account/register
 GET /account/users
+GET /announcement
 GET /api/integrations/twilio/state
 GET /api/mcp/bindings
 GET /api/settings/analytics
