@@ -136,6 +136,23 @@ export async function errorFromResponse(res: Response): Promise<ApiError> {
   return new ApiError(res.status, detail || statusLine, payload);
 }
 
+/** Detail the backend account gate (core/account_gate.py) answers with. */
+export const ACCOUNT_LOGIN_REQUIRED = 'account login required';
+
+export function isAccountLoginRequired(error: ApiError): boolean {
+  return (error.status === 401 || error.status === 403) && error.detail === ACCOUNT_LOGIN_REQUIRED;
+}
+
+/** URL of a server-rendered account page (login, profile, members…). */
+export function accountPageUrl(page: string): string {
+  return apiPath(`/account/${page}`);
+}
+
+function redirectToAccountPage(page: 'login' | 'pending') {
+  if (typeof window === 'undefined') return;
+  window.location.assign(accountPageUrl(page));
+}
+
 /** Fired after a successful `POST /engines/select`. */
 export const ENGINE_SELECTED_EVENT = 'ov:engine-selected';
 
@@ -185,6 +202,10 @@ export async function apiFetch(path: string, init?: RequestInit): Promise<Respon
     const error = await errorFromResponse(res);
     const detail = error.detail.toLowerCase();
     const adminGate = error.status === 403 && detail.includes('admin api key');
+    if (__WEB_DEPLOYMENT__ && isAccountLoginRequired(error)) {
+      redirectToAccountPage(error.status === 403 ? 'pending' : 'login');
+      throw error;
+    }
     if (__WEB_DEPLOYMENT__ && (error.status === 401 || adminGate)) {
       const mode = detail.includes('api key') ? 'apikey' : 'pin';
       const currentSession = getAdminSession(absoluteApiBase());

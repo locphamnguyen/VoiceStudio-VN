@@ -3435,5 +3435,11 @@
     "error": "ตรวจสอบภาษาไม่ได้",
     "modelLanguages": "ภาษาสำหรับโมเดลนี้",
     "changeModel": "เปลี่ยนโมเดล"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
   }
 }

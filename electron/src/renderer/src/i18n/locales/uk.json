@@ -3439,5 +3439,11 @@
     "error": "Не вдалося перевірити мови",
     "modelLanguages": "Мови цієї моделі",
     "changeModel": "Змінити модель"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
   }
 }

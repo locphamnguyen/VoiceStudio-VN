@@ -3435,5 +3435,11 @@
     "error": "言語を確認できませんでした",
     "modelLanguages": "このモデルの言語",
     "changeModel": "モデルを変更"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
   }
 }

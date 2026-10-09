@@ -3435,5 +3435,11 @@
     "error": "Talen konden niet worden gecontroleerd",
     "modelLanguages": "Talen voor dit model",
     "changeModel": "Model wijzigen"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
   }
 }

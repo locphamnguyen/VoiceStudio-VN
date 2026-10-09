@@ -3435,5 +3435,11 @@
     "error": "无法检查语言",
     "modelLanguages": "此模型的语言",
     "changeModel": "更换模型"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
   }
 }

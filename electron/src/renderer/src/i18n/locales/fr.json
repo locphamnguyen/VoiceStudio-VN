@@ -3437,5 +3437,11 @@
     "error": "Impossible de vérifier les langues",
     "modelLanguages": "Langues de ce modèle",
     "changeModel": "Changer de modèle"
+  },
+  "account": {
+    "profile": "My account",
+    "signed_in_as": "Signed in as {{email}}",
+    "members": "Manage members",
+    "logout": "Sign out"
   }
 }

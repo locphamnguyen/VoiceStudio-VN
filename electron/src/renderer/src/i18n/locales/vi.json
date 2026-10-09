@@ -3435,5 +3435,11 @@
     "error": "Không thể kiểm tra ngôn ngữ",
     "modelLanguages": "Ngôn ngữ của mô hình này",
     "changeModel": "Đổi mô hình"
+  },
+  "account": {
+    "profile": "Tài khoản của tôi",
+    "signed_in_as": "Đang đăng nhập: {{email}}",
+    "members": "Quản lý thành viên",
+    "logout": "Đăng xuất"
   }
 }
