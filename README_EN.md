@@ -11,6 +11,7 @@
     <a href="#get-started">Get started</a> ·
     <a href="#documentation">Docs</a> ·
     <a href="https://discord.gg/bzQavDfVV9">Discord</a> ·
+    <a href="README.md">Tiếng Việt</a> ·
     <a href="README_CN.md">简体中文</a> ·
     <a href="README_JA.md">日本語</a>
   </p>
