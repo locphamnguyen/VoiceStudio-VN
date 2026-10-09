@@ -40,6 +40,10 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   return matchLocale(value, SUPPORTED_LOCALES);
 }
 
+/** Bản VoiceStudio-VN: giao diện luôn mở bằng tiếng Việt, trừ khi người dùng
+ * đã tự chọn ngôn ngữ khác trong Cài đặt (lựa chọn đó được nhớ lại). */
+export const DEFAULT_LOCALE: AppLocale = 'vi';
+
 function initialLocale(): AppLocale {
   try {
     const saved = normalizeLocale(localStorage.getItem(LOCALE_KEY));
@@ -47,13 +51,7 @@ function initialLocale(): AppLocale {
   } catch {
     // Storage can be unavailable in hardened browser contexts.
   }
-  if (typeof navigator !== 'undefined') {
-    for (const candidate of navigator.languages || [navigator.language]) {
-      const locale = normalizeLocale(candidate);
-      if (locale) return locale;
-    }
-  }
-  return 'en';
+  return DEFAULT_LOCALE;
 }
 
 async function loadLocale(locale: AppLocale): Promise<void> {
