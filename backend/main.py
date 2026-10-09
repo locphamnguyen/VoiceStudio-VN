@@ -743,6 +743,7 @@ def _phase_a_build_inner() -> None:
     from api.routers import workers as workers_router  # noqa: E402
     from api.routers import telephony_twilio as _telephony_twilio_router  # noqa: E402
     from api.routers import calls as _calls_router  # noqa: E402
+    from api.routers import accounts as _accounts_router  # noqa: E402
     _router_modules.extend([
         system, profiles, profile_images, exports, generation, voice_convert, dub_core, dub_generate,
         dub_export, dub_translate, projects, glossary, engines, tools,
@@ -751,7 +752,7 @@ def _phase_a_build_inner() -> None:
         openai_compat, tts_stream, marketplace, personas, sonitranslate,
         audiobook, longform_jobs, pronunciation, settings_router,
         media_tools_router, auth_router, _mcp_bindings_router, workers_router,
-        _telephony_twilio_router, _calls_router,
+        _telephony_twilio_router, _calls_router, _accounts_router,
     ])
     # Download-acceleration state, once, for triage-from-logs (FDL-03).
     try:
@@ -1843,6 +1844,13 @@ app.add_middleware(StartupGateMiddleware)
 # Starlette places it outside them: browser preflights carry no credentials and
 # must reach CORS before either gate can reject the request.
 app.add_middleware(NetworkAccessMiddleware)
+
+# VoiceStudio-VN: cổng đăng nhập tài khoản (đăng ký / đăng nhập kiểu Vonia).
+# Bật mặc định khi chạy bản web; Electron desktop đặt VOICESTUDIO_ACCOUNTS=off.
+# Đặt ngoài NetworkAccess và trong BearerKey/CORS: 401 vẫn mang header CORS, và
+# danh tính API key (đã phân giải trong scope) được nhận để bỏ qua đăng nhập.
+from core.account_gate import AccountGateMiddleware
+app.add_middleware(AccountGateMiddleware)
 
 # Remote-backend bearer gate (parity program Wave 2.3 / §R2). Inert unless
 # OMNIVOICE_API_KEY is set. Distinct from the PIN gate above: the PIN guards
