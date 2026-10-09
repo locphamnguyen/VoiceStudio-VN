@@ -218,7 +218,7 @@ Khi có bản mới hoặc tin cần biết, một **dải thông báo mỏng** 
 | `instanceId` | chuỗi ngẫu nhiên sinh lần đầu chạy, lưu ở tệp `instance_id` trong thư mục dữ liệu — để đếm "một máy = một bản cài" |
 | `version` | số phiên bản VoiceStudio đang chạy |
 
-**Không gửi** gì về người dùng, tài khoản, giọng nói, văn bản hay cấu hình. Phía nhận **không lưu địa chỉ IP**. Máy không có mạng thì bỏ qua êm, không ảnh hưởng gì đến việc dùng. Đây là cách dự án biết bản tiếng Việt đang được dùng đến đâu và báo cập nhật cho bạn — nó là một phần của bản phát hành, **không có biến `.env` để tắt**. Toàn bộ mã ở `backend/services/phone_home.py`, `backend/core/announcement.py` và `electron/src/renderer/src/components/app-shell/server-announcement-banner.tsx`; phía nhận ở `deploy/phone-home-worker/`.
+**Không gửi** gì về người dùng, tài khoản, giọng nói, văn bản hay cấu hình. Phía nhận **không lưu địa chỉ IP**. Máy không có mạng thì bỏ qua êm, không ảnh hưởng gì đến việc dùng.
 
 ---
 
