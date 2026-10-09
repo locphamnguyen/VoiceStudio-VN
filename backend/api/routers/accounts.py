@@ -70,6 +70,11 @@ class AdminAction(BaseModel):
 
 # ── tiện ích ─────────────────────────────────────────────────────────────────
 
+def _clean(value) -> str:
+    """Giá trị đến từ request trước khi ghi log: bỏ xuống dòng (chống giả dòng log), cắt ngắn."""
+    return "".join(ch if ch.isprintable() else "?" for ch in str(value))[:200]
+
+
 def _err(status: int, message: str, code: str) -> JSONResponse:
     return JSONResponse(status_code=status, content={"error": {"message": message, "type": code}},
                         headers=_NO_STORE)
@@ -202,7 +207,7 @@ def account_login(request: Request, body: LoginBody):
     token = accounts.store.create_session(user.email)
     resp = JSONResponse({"user": user.public(), "redirect": "/"}, headers=_NO_STORE)
     _set_session_cookie(request, resp, token)
-    log.info("Password login: %s", user.email)
+    log.info("Password login: %s", _clean(user.email))
     return resp
 
 
@@ -224,10 +229,10 @@ def account_register(request: Request, body: RegisterBody):
         resp = JSONResponse({"user": user.public(), "redirect": "/",
                              "message": "Đã tạo tài khoản Quản trị viên."}, headers=_NO_STORE)
         _set_session_cookie(request, resp, token)
-        log.info("Bootstrap admin registered: %s", user.email)
+        log.info("Bootstrap admin registered: %s", _clean(user.email))
         return resp
     if user is not None:
-        log.info("New registration pending approval: %s", user.email)
+        log.info("New registration pending approval: %s", _clean(user.email))
     return JSONResponse(status_code=202, headers=_NO_STORE, content={
         "message": "Đã nhận yêu cầu đăng ký. Tài khoản sẽ dùng được sau khi Quản trị viên duyệt."})
 
@@ -300,7 +305,7 @@ def account_google_callback(
         return resp
 
     if error:
-        log.info("Google OAuth callback error: %s", error)
+        log.info("Google OAuth callback error: %s", _clean(error))
         return back(REASONS[ERR_GOOGLE_DENIED])
     code_verifier = accounts.verify_state_cookie(request.cookies.get(STATE_COOKIE), state or "")
     if not code or not code_verifier:
@@ -315,14 +320,14 @@ def account_google_callback(
     try:
         user = accounts.login_google(profile)
     except AuthError as exc:
-        log.info("Google login refused (%s): %s", exc.code, profile.get("email"))
+        log.info("Google login refused (%s): %s", exc.code, _clean(profile.get("email")))
         return back(REASONS.get(exc.code, "he_thong"))
 
     token = accounts.store.create_session(user.email)
     resp = RedirectResponse("/", status_code=303)
     _set_session_cookie(request, resp, token)
     resp.delete_cookie(STATE_COOKIE, path="/")
-    log.info("Google login: %s", user.email)
+    log.info("Google login: %s", _clean(user.email))
     return resp
 
 
@@ -359,5 +364,5 @@ def account_user_action(request: Request, email: str, body: AdminAction):
         user = admin_update(get_accounts().store, actor, email, body.action)
     except AuthError as exc:
         return _auth_err(exc)
-    log.info("Admin %s: %s → %s", actor.email, body.action, email)
+    log.info("Admin %s: %s → %s", _clean(actor.email), _clean(body.action), _clean(email))
     return JSONResponse({"user": user.public() if user else None}, headers=_NO_STORE)

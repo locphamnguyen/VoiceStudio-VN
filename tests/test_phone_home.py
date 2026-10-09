@@ -121,7 +121,7 @@ def test_route_returns_cached_announcement(monkeypatch):
     app.include_router(router_mod.router)
     client = TestClient(app)
     assert client.get("/announcement").json() == {"announcement": None}
-    monkeypatch.setattr(phone_home, "_current", parse_announcement_response(
+    monkeypatch.setattr(phone_home._state, "current", parse_announcement_response(
         {"announcement": {"id": "a", "text": "t"}}))
     body = client.get("/announcement").json()["announcement"]
     assert body["id"] == "a" and body["dismissible"] is True

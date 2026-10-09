@@ -40,15 +40,22 @@ BOOT_DELAY_S = 30
 REQUEST_TIMEOUT_S = 5.0
 INSTANCE_ID_FILE = "instance_id"
 
-_current: Optional[Announcement] = None
-_instance_id: Optional[str] = None
+class _State:
+    """Trạng thái của tiến trình (một thể hiện duy nhất ``_state``)."""
+
+    def __init__(self) -> None:
+        self.current: Optional[Announcement] = None
+        self.instance_id: Optional[str] = None
+        self.in_flight = False
+
+
+_state = _State()
 _id_lock = threading.Lock()
-_in_flight = False
 
 
 def current_announcement() -> Optional[Announcement]:
     """Thông báo đang cache — None khi chưa gọi lần nào hoặc trang trung tâm bảo "không có"."""
-    return _current
+    return _state.current
 
 
 def _data_dir() -> str:
@@ -66,10 +73,9 @@ def _valid_uuid(value: str) -> bool:
 
 def get_or_create_instance_id(data_dir: Optional[str] = None) -> str:
     """Đọc (hoặc sinh lần đầu) instance_id. Ghi atomic: tệp tạm rồi ``os.replace``."""
-    global _instance_id
     with _id_lock:
-        if _instance_id and data_dir is None:
-            return _instance_id
+        if _state.instance_id and data_dir is None:
+            return _state.instance_id
         folder = data_dir or _data_dir()
         path = os.path.join(folder, INSTANCE_ID_FILE)
         try:
@@ -77,10 +83,10 @@ def get_or_create_instance_id(data_dir: Optional[str] = None) -> str:
                 existing = fh.read().strip()
             if _valid_uuid(existing):
                 if data_dir is None:
-                    _instance_id = existing
+                    _state.instance_id = existing
                 return existing
         except OSError:
-            pass
+            pass  # chưa có tệp (lần chạy đầu) hoặc không đọc được ⇒ sinh mã mới bên dưới
         new_id = str(uuid.uuid4())
         os.makedirs(folder, exist_ok=True)
         fd, tmp = tempfile.mkstemp(dir=folder, prefix=".instance_id.")
@@ -92,10 +98,10 @@ def get_or_create_instance_id(data_dir: Optional[str] = None) -> str:
             try:
                 os.unlink(tmp)
             except OSError:
-                pass
+                pass  # dọn tệp tạm là phụ; lỗi ghi gốc mới là thứ cần ném ra
             raise
         if data_dir is None:
-            _instance_id = new_id
+            _state.instance_id = new_id
         return new_id
 
 
@@ -113,10 +119,9 @@ async def ping_once(client=None) -> Optional[Announcement]:
 
     ``client`` để test tiêm ``httpx.AsyncClient`` giả; mặc định tạo client mới.
     """
-    global _current, _in_flight
-    if _in_flight:
-        return _current
-    _in_flight = True
+    if _state.in_flight:
+        return _state.current
+    _state.in_flight = True
     try:
         import httpx
 
@@ -133,17 +138,17 @@ async def ping_once(client=None) -> Optional[Announcement]:
                 await http.aclose()
         if res.status_code < 200 or res.status_code >= 300:
             log.debug("[phone-home] trang trung tâm trả %s — giữ thông báo đang có", res.status_code)
-            return _current
-        _current = parse_announcement_response(res.json())
-        return _current
+            return _state.current
+        _state.current = parse_announcement_response(res.json())
+        return _state.current
     except asyncio.CancelledError:
         raise
     except Exception as exc:  # noqa: BLE001
         # Cố ý debug, không warning: máy không có mạng ra ngoài là bình thường.
         log.debug("[phone-home] gọi-về thất bại — giữ thông báo đang có: %s", exc)
-        return _current
+        return _state.current
     finally:
-        _in_flight = False
+        _state.in_flight = False
 
 
 async def phone_home_loop() -> None:
@@ -162,7 +167,5 @@ def should_start() -> bool:
 
 
 def _reset_for_tests() -> None:
-    global _current, _instance_id, _in_flight
-    _current = None
-    _instance_id = None
-    _in_flight = False
+    global _state
+    _state = _State()

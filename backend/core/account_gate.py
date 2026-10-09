@@ -84,12 +84,15 @@ class AccountGateMiddleware:
 
     async def __call__(self, scope, receive, send):
         if scope["type"] not in ("http", "websocket") or not accounts_enabled():
-            return await self.app(scope, receive, send)
+            await self.app(scope, receive, send)
+            return
         if scope["type"] == "http" and str(scope.get("method", "GET")).upper() == "OPTIONS":
-            return await self.app(scope, receive, send)
+            await self.app(scope, receive, send)
+            return
         path = scope.get("path", "") or ""
         if is_exempt_path(path) or _strong_principal(scope):
-            return await self.app(scope, receive, send)
+            await self.app(scope, receive, send)
+            return
 
         headers = Headers(scope=scope)
         token = _cookie_value(headers, COOKIE)
@@ -99,7 +102,8 @@ class AccountGateMiddleware:
             resolved = await anyio.to_thread.run_sync(store.resolve_session, token)
         if resolved and resolved[1]:
             scope.setdefault("state", {})[ACCOUNT_USER_STATE] = resolved[0]
-            return await self.app(scope, receive, send)
+            await self.app(scope, receive, send)
+            return
 
         if scope["type"] == "websocket":
             await receive()  # websocket.connect
@@ -120,4 +124,4 @@ class AccountGateMiddleware:
         if token:
             # Phiên hỏng / tài khoản vừa bị khoá → xoá cookie.
             resp.delete_cookie(COOKIE, path="/")
-        return await resp(scope, receive, send)
+        await resp(scope, receive, send)

@@ -181,7 +181,7 @@ def normalize_email(email: str) -> str:
 
 def is_email(e: str) -> bool:
     """Kiểm tra hình thức tối thiểu: đúng một @, hai phía không rỗng, không khoảng trắng."""
-    if not e or " " in e or e.count("@") != 1:
+    if not e or e.count("@") != 1 or any(ch.isspace() or not ch.isprintable() for ch in e):
         return False
     local, _, domain = e.partition("@")
     return bool(local) and "." in domain and not domain.startswith(".") and not domain.endswith(".")

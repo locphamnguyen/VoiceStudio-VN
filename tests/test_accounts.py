@@ -287,3 +287,14 @@ def test_voicestudio_api_key_bypasses_account_login(client, monkeypatch):
     assert client.get("/engines").status_code == 401
     r = client.get("/engines", headers={"Authorization": "Bearer khoa-bi-mat-123"})
     assert r.json() == {"ok": True}
+
+
+@pytest.mark.parametrize("email", ["a\n@vi.vn", "a@vi.vn\r\nX", "a\t@vi.vn", "a\x00@vi.vn"])
+def test_email_rejects_control_and_whitespace(email):
+    assert not acc.is_email(email)
+
+
+def test_log_values_cannot_forge_lines():
+    from api.routers.accounts import _clean
+
+    assert "\n" not in _clean("x\nINFO giả mạo") and "\r" not in _clean("x\r")
