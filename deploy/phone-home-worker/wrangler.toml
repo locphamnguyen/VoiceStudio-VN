@@ -5,12 +5,12 @@ main = "src/index.js"
 compatibility_date = "2026-09-01"
 
 # Gắn vào domain trung tâm. Bản cài gọi:
-#   https://go.zalocrm.vn/voicestudio-phone-home/v1/ping
+#   https://updater.zopen.vn/voicestudio-phone-home/v1/ping
 #   (backend/services/phone_home.py → PHONE_HOME_URL)
-# Prefix riêng "voicestudio-phone-home" để không đụng Worker gọi-về của ZaloCRM
-# ("/phone-home/*") trên cùng zone.
+# Prefix riêng "voicestudio-phone-home" để sản phẩm khác (vd ZaloCRM) dùng chung
+# updater.zopen.vn bằng đường dẫn của nó mà không đụng nhau.
 routes = [
-  { pattern = "go.zalocrm.vn/voicestudio-phone-home/*", zone_name = "zalocrm.vn" },
+  { pattern = "updater.zopen.vn/voicestudio-phone-home/*", zone_name = "zopen.vn" },
 ]
 
 [[d1_databases]]

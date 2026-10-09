@@ -2,12 +2,12 @@
 
 Phía NHẬN của tính năng gọi-về, chạy trên Cloudflare của chủ dự án. Port từ Worker của
 ZaloCRM (`ZCRM-EE/deploy/phone-home-worker`), chỉ đổi đường dẫn sang
-`/voicestudio-phone-home/*` và dùng D1 riêng — hai sản phẩm có số liệu riêng, cùng zone
-`zalocrm.vn` vẫn không đụng nhau.
+`/voicestudio-phone-home/*` trên `updater.zopen.vn` và dùng D1 riêng — sản phẩm khác dùng
+chung tên miền này bằng đường dẫn của nó, số liệu không lẫn nhau.
 
 ## Nó làm gì
 
-Mỗi bản VoiceStudio-VN gọi `POST https://go.zalocrm.vn/voicestudio-phone-home/v1/ping`
+Mỗi bản VoiceStudio-VN gọi `POST https://updater.zopen.vn/voicestudio-phone-home/v1/ping`
 30 giây sau khi khởi động và mỗi 12 giờ, gửi **đúng hai trường** `{ instanceId, version }`.
 Worker:
 
@@ -27,13 +27,16 @@ wrangler secret put ADMIN_TOKEN               # chuỗi dài ngẫu nhiên: open
 wrangler deploy
 ```
 
+Zone `zopen.vn` phải nằm trên Cloudflare, và `updater.zopen.vn` cần một bản ghi DNS
+**proxied** (đám mây cam) — ví dụ `AAAA updater 100::` — để route Worker bắt được request.
+
 Đổi domain thì đổi hằng `PHONE_HOME_URL` ở `backend/services/phone_home.py` **trước khi
 phát hành** — địa chỉ ghim cứng trong mã, không có biến env.
 
 ## Dùng hằng ngày
 
 ```bash
-T="Bearer $ADMIN_TOKEN"; B=https://go.zalocrm.vn/voicestudio-phone-home/v1/admin
+T="Bearer $ADMIN_TOKEN"; B=https://updater.zopen.vn/voicestudio-phone-home/v1/admin
 
 # Thống kê: đã cài / đang dùng 7 ngày / 30 ngày / theo bản
 curl -s -H "Authorization: $T" $B/stats

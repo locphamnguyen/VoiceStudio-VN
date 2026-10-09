@@ -34,7 +34,7 @@ from core.announcement import Announcement, build_ping_payload, parse_announceme
 
 log = logging.getLogger("omnivoice.phone_home")
 
-PHONE_HOME_URL = "https://go.zalocrm.vn/voicestudio-phone-home/v1/ping"
+PHONE_HOME_URL = "https://updater.zopen.vn/voicestudio-phone-home/v1/ping"
 PING_INTERVAL_S = 12 * 60 * 60
 BOOT_DELAY_S = 30
 REQUEST_TIMEOUT_S = 5.0

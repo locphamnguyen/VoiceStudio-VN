@@ -108,7 +108,7 @@ def test_no_env_switch_and_url_is_https():
     # Chủ dự án chốt: không có công tắc env để tắt gọi-về.
     src = (ROOT / "backend" / "services" / "phone_home.py").read_text(encoding="utf-8")
     assert "os.environ" not in src and "getenv" not in src
-    assert phone_home.PHONE_HOME_URL.startswith("https://")
+    assert phone_home.PHONE_HOME_URL.startswith("https://updater.zopen.vn/")
 
 
 def test_route_returns_cached_announcement(monkeypatch):
