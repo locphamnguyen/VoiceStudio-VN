@@ -188,7 +188,7 @@ def is_email(e: str) -> bool:
 
 
 def in_domain(email: str, domain: str) -> bool:
-    """So phần sau @ (đòi ĐÚNG MỘT @ — chặn ``ke@evil.com@mien.vn``)."""
+    """So phần sau @ (đòi ĐÚNG MỘT @ — chặn ``ke@evil.example@mien.example``)."""
     if email.count("@") != 1:
         return False
     return email.partition("@")[2].lower() == domain.lower()

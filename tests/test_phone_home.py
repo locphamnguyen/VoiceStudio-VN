@@ -121,9 +121,12 @@ def test_route_returns_cached_announcement(monkeypatch):
     app = FastAPI()
     app.include_router(router_mod.router)
     client = TestClient(app)
+    monkeypatch.setattr(router_mod, "current_announcement", lambda: None)
     assert client.get("/announcement").json() == {"announcement": None}
-    monkeypatch.setattr(phone_home._state, "current", parse_announcement_response(
-        {"announcement": {"id": "a", "text": "t"}}))
+    # Patch what the router itself calls: the suite may reload service modules,
+    # so the test's own `phone_home` import is not guaranteed to be the router's.
+    notice = parse_announcement_response({"announcement": {"id": "a", "text": "t"}})
+    monkeypatch.setattr(router_mod, "current_announcement", lambda: notice)
     body = client.get("/announcement").json()["announcement"]
     assert body["id"] == "a" and body["dismissible"] is False
 

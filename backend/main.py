@@ -1298,9 +1298,10 @@ async def lifespan(app: FastAPI):
         getattr(app.state, "preload_task", None),
         getattr(app.state, "capture_preload_task", None),
         getattr(app.state, "watermark_preload_task", None),
-        getattr(app.state, "phone_home_task", None),
         timeout=20.0,
     )
+    # VoiceStudio-VN: the phone-home loop only sleeps or waits on a 5 s HTTP call.
+    await _cancel_and_await_tasks(getattr(app.state, "phone_home_task", None), timeout=6.0)
     # The watermark warm-up runs on its dedicated 1-worker pool. Cancellation
     # detaches the asyncio future but cannot kill a thread inside AudioSeal,
     # so drain it fully before lifespan teardown reports completion.

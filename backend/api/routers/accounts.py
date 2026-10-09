@@ -72,7 +72,10 @@ class AdminAction(BaseModel):
 
 def _clean(value) -> str:
     """Giá trị đến từ request trước khi ghi log: bỏ xuống dòng (chống giả dòng log), cắt ngắn."""
-    return "".join(ch if ch.isprintable() else "?" for ch in str(value))[:200]
+    # replace() tường minh cho \r/\n trước (dạng làm sạch mà CodeQL nhận ra), rồi
+    # thay nốt mọi ký tự điều khiển khác.
+    text = str(value).replace("\r", "").replace("\n", "")
+    return "".join(ch if ch.isprintable() else "?" for ch in text)[:200]
 
 
 def _err(status: int, message: str, code: str) -> JSONResponse:

@@ -190,12 +190,12 @@ Thư mục dữ liệu (chứa `accounts.db`, giọng, dự án):
 <summary><strong>Bật đăng nhập bằng Google</strong></summary>
 
 1. Vào [Google Cloud Console](https://console.cloud.google.com/) → *APIs & Services → Credentials → Create credentials → OAuth client ID*, loại **Web application**.
-2. Ở *Authorized redirect URIs* thêm: `<địa-chỉ-của-bạn>/account/google/callback`, ví dụ `https://voice.congty.vn/account/google/callback`.
+2. Ở *Authorized redirect URIs* thêm: `<địa-chỉ-của-bạn>/account/google/callback`, ví dụ `https://voice.congty.example/account/google/callback`.
 3. Thêm vào tệp `.env` (xem mục dưới):
    ```ini
    GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
    GOOGLE_CLIENT_SECRET=xxxxxxxx
-   VOICESTUDIO_PUBLIC_URL=https://voice.congty.vn
+   VOICESTUDIO_PUBLIC_URL=https://voice.congty.example
    ```
 4. Khởi động lại VoiceStudio — nút **Tiếp tục với Google** sẽ hiện trên trang đăng nhập.
 
@@ -243,10 +243,10 @@ Tạo tệp tên `.env` ở thư mục gốc VoiceStudio (cùng chỗ với `Cha
 ```ini
 # Chỉ những email này mới có thể trở thành Quản trị viên đầu tiên
 # (NÊN đặt nếu máy mở cho nhiều người — chặn người lạ đăng ký trước bạn).
-VOICESTUDIO_ADMIN_EMAILS=ban@congty.vn
+VOICESTUDIO_ADMIN_EMAILS=ban@congty.example
 
 # Chỉ cho email thuộc tên miền này đăng ký / đăng nhập.
-VOICESTUDIO_ALLOWED_DOMAIN=congty.vn
+VOICESTUDIO_ALLOWED_DOMAIN=congty.example
 
 # Tắt hẳn đăng nhập (chỉ khi dùng một mình trên máy, KHÔNG mở ra mạng).
 VOICESTUDIO_ACCOUNTS=off
@@ -257,7 +257,7 @@ GOOGLE_CLIENT_SECRET=
 VOICESTUDIO_PUBLIC_URL=
 
 # Tên miền riêng khi đứng sau reverse proxy
-OMNIVOICE_ALLOWED_HOSTS=voice.congty.vn
+OMNIVOICE_ALLOWED_HOSTS=voice.congty.example
 
 # Bị chặn Hugging Face? Dùng mirror:
 HF_ENDPOINT=https://hf-mirror.com
