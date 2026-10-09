@@ -50,11 +50,11 @@ if ($Lan) {
 Write-Host "   ĐỪNG đóng cửa sổ này khi đang dùng." -ForegroundColor Magenta
 Write-Host "==============================================" -ForegroundColor Magenta
 
-# Mở trình duyệt khi máy chủ trả lời /health (tối đa ~3 phút).
+# Mở trình duyệt khi máy chủ khởi động xong (trang đăng nhập trả lời; tối đa ~5 phút).
 Start-Job -ArgumentList $Url -ScriptBlock {
   param($u)
-  for ($i = 0; $i -lt 180; $i++) {
-    try { Invoke-WebRequest "$u/health" -UseBasicParsing -TimeoutSec 2 | Out-Null; Start-Process $u; return } catch { Start-Sleep 1 }
+  for ($i = 0; $i -lt 300; $i++) {
+    try { Invoke-WebRequest "$u/account/login" -UseBasicParsing -TimeoutSec 2 | Out-Null; Start-Process $u; return } catch { Start-Sleep 1 }
   }
 } | Out-Null
 

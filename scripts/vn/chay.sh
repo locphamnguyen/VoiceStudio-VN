@@ -33,10 +33,10 @@ if [ "$HOST" = "0.0.0.0" ]; then
 fi
 printf '   ĐỪNG đóng cửa sổ này khi đang dùng.\n==============================================\033[0m\n'
 
-# Mở trình duyệt khi máy chủ sẵn sàng.
+# Mở trình duyệt khi máy chủ khởi động xong (trang đăng nhập trả lời).
 (
-  for _ in $(seq 1 180); do
-    if curl -fsS "$URL/health" >/dev/null 2>&1; then
+  for _ in $(seq 1 300); do
+    if curl -fsS -o /dev/null "$URL/account/login" >/dev/null 2>&1; then
       if command -v open >/dev/null; then open "$URL"; elif command -v xdg-open >/dev/null; then xdg-open "$URL" >/dev/null 2>&1; fi
       exit 0
     fi
