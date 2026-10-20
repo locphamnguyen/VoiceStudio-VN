@@ -10,8 +10,15 @@ _POSTHOG_TOKEN = re.search(
     (ROOT / "backend/core/analytics.py").read_text(encoding="utf-8"),
 )
 assert _POSTHOG_TOKEN is not None
+# Retired public tokens remain in git history, and scheduled full-history scans
+# read every commit. Built from parts so the token guard keeps phc_ literals in
+# the canonical source files only.
+_RETIRED_POSTHOG_TOKENS = {
+    "phc_" + "v5wMjnYMPMaEcRNLRKQsTYCzPaYWh7wcHPhXNkNajVf9",  # EU project, #1193
+}
 EXPECTED_EXACT_REGEXES = {
     f"^{_POSTHOG_TOKEN.group(0)}$",
+    *(f"^{token}$" for token in _RETIRED_POSTHOG_TOKENS),
     "^528e871c2a26c4f0f7773b9754e2e1acae20899d$",
     "^hf_abcdefghijklmnopqrstuvwxyz01234567890abcd$",
     "^hf_abcdefghijklmnopqrstuvwxyz0123456789ABCDEF$",
